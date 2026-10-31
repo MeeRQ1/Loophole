@@ -23,7 +23,8 @@ export function offlinePlugin(): Plugin {
       ];
       const digest = createHash("sha256")
         .update(JSON.stringify(files))
-        .update(readFileSync("index.html"));
+        .update(readFileSync("index.html"))
+        .update(readFileSync("pwa.ts"));
       for (const entry of Object.values(bundle))
         digest.update(entry.type === "chunk" ? entry.code : entry.source);
       for (const file of files.filter(
@@ -34,8 +35,9 @@ export function offlinePlugin(): Plugin {
       const source = `/* Generated from this release's asset manifest. */
 const CACHE = 'loophole-${revision}';
 const FILES = ${JSON.stringify([...new Set(files)])};
+// Revalidate HTTP cache entries, especially index.html, on each release.
 self.addEventListener('install', event => {
-  event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(FILES.map(file => new URL(file, self.registration.scope).href))));
+  event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(FILES.map(file => new Request(new URL(file, self.registration.scope).href, { cache: 'reload' })))));
 });
 self.addEventListener('activate', event => {
   event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key.startsWith('loophole-') && key !== CACHE).slice(0, -1).map(key => caches.delete(key)))).then(() => self.clients.claim()));

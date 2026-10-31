@@ -8,6 +8,7 @@
 - Add a versioned, validated 366-day schedule from November 1 while keeping historical dates and original bank unchanged.
 - Make scored Nudges informative when a first-letter clue is already visible.
 - Preserve saved progress, scoring, achievements, streak policies, and old challenge scoring; add new challenge-link versioning for calibration.
+- Revalidate cached HTML when installing a service-worker update so old sessions receive the new interface without losing progress.
 - Extend responsive, accessibility, historical-save, and future-content regression checks; include actual screenshots for all 18 design references.
 
 ## 1.0.1 — 2026-10-31
