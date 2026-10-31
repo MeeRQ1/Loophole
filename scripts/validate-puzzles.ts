@@ -12,7 +12,10 @@ function words(rule: Rule): Set<string> {
 export function validateBank(): number {
   const used = new Set<string>();
   let checked = 0;
-  if (bank.days < 366) throw Error("Schedule needs at least one year");
+  if (bank.days < 396)
+    throw Error(
+      "Schedule must include 30 archive dates plus a full launch year",
+    );
   for (const [difficulty, count, min, max] of [
     ["easy", 3, 40, 250],
     ["medium", 4, 15, 70],

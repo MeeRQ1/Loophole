@@ -63,7 +63,7 @@ The broad accepted dictionary and the smaller common-word quality dictionary are
 
 The engine supports length, letter placement, inclusion and exclusion, two-letter sequences, vowels, repeated and distinct letters, and relationships between first and last letters. The same typed definitions and evaluator are used in gameplay, generation, challenge creation, and tests.
 
-The daily bank is checked in so released dates stay stable. Each date maps to a deterministic easy/medium/hard set. Puzzles originate from verified solutions, are measured against common vocabulary, and are checked for invalid or redundant rules. A deterministic fallback keeps dates outside the stored schedule playable.
+The 396-day daily bank starts October 1, 2026, covering the 30-day archive and a full year ahead of the October 31 launch. It contains 1,188 validated puzzles and is checked in so released dates stay stable. Each date maps to a deterministic easy/medium/hard set. Puzzles originate from verified solutions, are measured against common vocabulary, and are checked for invalid or redundant rules. A deterministic fallback keeps dates outside the stored schedule playable.
 
 ```sh
 npm run generate:puzzles

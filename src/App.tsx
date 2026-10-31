@@ -1,3 +1,4 @@
+import { version } from "../package.json";
 import {
   lazy,
   Suspense,
@@ -595,7 +596,7 @@ export default function App() {
           <a href="#/help">How to play</a>
         </nav>
         <small>
-          No accounts. No ads. Just possibilities. <span>v1.0.0</span>
+          No accounts. No ads. Just possibilities. <span>v{version}</span>
         </small>
       </footer>
     </>

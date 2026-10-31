@@ -112,7 +112,7 @@ function acceptedSolutionCount(rules: Rule[]): number {
 }
 const path = "src/data/puzzles.json";
 const old = existsSync(path) ? JSON.parse(readFileSync(path, "utf8")) : null;
-const days = Math.max(old?.days ?? 0, Number(process.env.PUZZLE_DAYS ?? 366));
+const days = Math.max(old?.days ?? 0, Number(process.env.PUZZLE_DAYS ?? 396));
 const puzzles: Record<Difficulty, Puzzle[]> = old?.puzzles ?? {
   easy: [],
   medium: [],

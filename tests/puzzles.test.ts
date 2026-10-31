@@ -1,3 +1,5 @@
+import type { Difficulty } from "../src/engine/types";
+import { createHash } from "node:crypto";
 import { describe, expect, it } from "vitest";
 import {
   puzzleBank,
@@ -15,7 +17,7 @@ import {
 } from "../src/engine/challenges";
 describe("scheduled and practice content", () => {
   it("contains a year of unique validated daily puzzles", () => {
-    expect(puzzleBank.days).toBeGreaterThanOrEqual(366);
+    expect(puzzleBank.days).toBeGreaterThanOrEqual(396);
     const seen = new Set<string>();
     for (const [level, pool] of Object.entries(puzzleBank.puzzles)) {
       expect(pool.length).toBe(puzzleBank.days);
@@ -107,4 +109,17 @@ describe("safe friend challenges", () => {
     ])
       expect(() => decodeChallenge(payload)).toThrow();
   });
+});
+
+// The first deployed year's definitions stay immutable as the schedule grows.
+it("preserves every initially deployed puzzle", () => {
+  const prefix = Object.fromEntries(
+    ["easy", "medium", "hard"].map((d) => [
+      d,
+      puzzleBank.puzzles[d as Difficulty].slice(0, 366),
+    ]),
+  );
+  expect(
+    createHash("sha256").update(JSON.stringify(prefix)).digest("hex"),
+  ).toBe("32189f8f7beb6815d9180cc077f4a736c15b206e54d109b993219a6a4d896c4d");
 });
