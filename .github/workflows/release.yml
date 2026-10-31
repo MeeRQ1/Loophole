@@ -32,6 +32,8 @@ jobs:
       - run: npm run build
       - run: npx playwright install --with-deps chromium
       - run: npm run test:browser
+      - name: Require versioned release notes
+        run: test -s "docs/releases/${GITHUB_REF_NAME}.md"
       - name: Package static website
         run: tar -czf "loophole-${GITHUB_REF_NAME}.tar.gz" -C dist .
       - name: Publish verified release with generated notes
@@ -39,7 +41,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           if [[ "$GITHUB_REF_NAME" == *-* ]]; then
-            gh release create "$GITHUB_REF_NAME" "loophole-${GITHUB_REF_NAME}.tar.gz" --verify-tag --generate-notes --prerelease --title "Loophole ${GITHUB_REF_NAME}"
+            gh release create "$GITHUB_REF_NAME" "loophole-${GITHUB_REF_NAME}.tar.gz" --verify-tag --notes-file "docs/releases/${GITHUB_REF_NAME}.md" --generate-notes --prerelease --title "Loophole ${GITHUB_REF_NAME}"
           else
-            gh release create "$GITHUB_REF_NAME" "loophole-${GITHUB_REF_NAME}.tar.gz" --verify-tag --generate-notes --title "Loophole ${GITHUB_REF_NAME}"
+            gh release create "$GITHUB_REF_NAME" "loophole-${GITHUB_REF_NAME}.tar.gz" --verify-tag --notes-file "docs/releases/${GITHUB_REF_NAME}.md" --generate-notes --title "Loophole ${GITHUB_REF_NAME}"
           fi

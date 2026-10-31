@@ -116,7 +116,7 @@ To roll back, revert the problematic commit on `main` and push the revert. CI wi
 
 ## Releases
 
-Update `package.json` and the lockfile version together, record meaningful changes in commits or a changelog, then create a matching semantic version tag:
+Update `package.json` and the lockfile version together, record meaningful changes in `docs/releases/vX.Y.Z.md` and the changelog, then create a matching semantic version tag:
 
 ```sh
 npm version 1.0.1 --no-git-tag-version
@@ -127,7 +127,7 @@ git tag v1.0.1
 git push origin v1.0.1
 ```
 
-`.github/workflows/release.yml` verifies that the tag matches the package version and repeats all mandatory tests before publishing a GitHub Release. It attaches a versioned `dist` archive and generates release notes from repository history. Tags containing a prerelease suffix create prereleases. If any mandatory check fails, publication stops; do not manually label a failing version stable.
+`.github/workflows/release.yml` verifies that the tag matches the package version and repeats all mandatory tests before publishing a GitHub Release. It attaches a versioned `dist` archive and combines required versioned release notes with generated repository history. Tags containing a prerelease suffix create prereleases. If any mandatory check fails, publication stops; do not manually label a failing version stable.
 
 Tagging does not itself deploy a different Pages version; the deployment tracks successful pushes to `main`. Review generated release notes after publication and add concrete player-facing changes when useful.
 
