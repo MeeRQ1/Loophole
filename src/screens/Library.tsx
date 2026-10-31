@@ -1,129 +1,147 @@
+import { useState } from "react";
 import { ACHIEVEMENTS, getStats } from "../engine/stats";
-import { scoreRound, totalScore } from "../engine/game";
+import { isComplete, scoreRound, totalScore } from "../engine/game";
 import type { Save } from "../engine/types";
 
-function displayDate(date: string) {
+function displayDate(date: string, options: Intl.DateTimeFormatOptions = {}) {
   return new Intl.DateTimeFormat(undefined, {
     month: "short",
     day: "numeric",
     year: "numeric",
     timeZone: "UTC",
+    ...options,
   }).format(new Date(`${date}T12:00:00Z`));
 }
 
 export function StatsScreen({ save }: { save: Save }) {
   const stats = getStats(save);
-  const maxAttempts = Math.max(1, ...stats.distribution);
+  const scores = stats.recent.slice(0, 14).reverse();
   return (
-    <section className="stack" aria-labelledby="stats-heading">
-      <header className="page-heading">
-        <p className="eyebrow">YOUR PERSONAL RECORD</p>
-        <h1 id="stats-heading">A little progress, every day.</h1>
-        <p className="muted">
-          Every number here is yours. Saved on this device, with no accounts or
-          rankings.
-        </p>
+    <section
+      className="quiet-page statistics-page"
+      aria-labelledby="stats-heading"
+    >
+      <header className="quiet-heading">
+        <p className="eyebrow">PERSONAL JOURNAL</p>
+        <h1 id="stats-heading">Your numbers.</h1>
+        <p className="editorial">A record of all the little ways through.</p>
       </header>
-      <div className="metric-grid">
-        <div className="panel metric">
-          <span className="metric-value">{stats.currentStreak}</span>
-          <span>day streak</span>
-        </div>
-        <div className="panel metric">
-          <span className="metric-value">
-            {stats.bestScore}
-            <small> / 500</small>
-          </span>
-          <span>best Daily Run</span>
-        </div>
-        <div className="panel metric">
-          <span className="metric-value">
-            {Math.round(stats.winRate)}
-            <small>%</small>
-          </span>
-          <span>daily rounds solved</span>
-        </div>
-        <div className="panel metric">
-          <span className="metric-value">{stats.dailyCompleted}</span>
-          <span>Daily Runs completed</span>
-        </div>
+      <div className="stat-summary">
+        {[
+          [stats.currentStreak, "day streak"],
+          [stats.longestStreak, "longest streak"],
+          [stats.roundsSolved, "rounds solved"],
+          [stats.bestScore, "best daily score"],
+        ].map(([value, label]) => (
+          <div className="metric" key={label}>
+            <strong className="stat-number">{value}</strong>
+            <span>{label}</span>
+          </div>
+        ))}
       </div>
-      <div className="grid">
-        <section className="panel stack">
-          <h2>The daily ledger</h2>
-          <dl className="stat-list">
-            <div>
-              <dt>Daily Runs started</dt>
-              <dd>{stats.dailyStarted}</dd>
+      <div className="stats-chart-layout">
+        <section aria-labelledby="recent-scores-title">
+          <h2 className="eyebrow" id="recent-scores-title">
+            RECENT DAILY SCORES
+          </h2>
+          {scores.length ? (
+            <div
+              className="score-chart"
+              role="img"
+              aria-label={scores
+                .map(
+                  (run) =>
+                    `${displayDate(run.date)}: ${totalScore(run)} of 500`,
+                )
+                .join("; ")}
+            >
+              {scores.map((run) => (
+                <span
+                  className="score-bar"
+                  key={run.id}
+                  style={{ height: `${Math.max(1, totalScore(run) / 5)}%` }}
+                  title={`${displayDate(run.date)} · ${totalScore(run)}/500`}
+                  aria-hidden="true"
+                />
+              ))}
             </div>
-            <div>
-              <dt>Fully solved Daily Runs</dt>
-              <dd>{stats.fullySolved}</dd>
+          ) : (
+            <div className="chart-empty">
+              <p>Your first completed Daily Run will start the story.</p>
             </div>
-            <div>
-              <dt>Longest daily streak</dt>
-              <dd>{stats.longestStreak} days</dd>
-            </div>
-            <div>
-              <dt>Perfect 500-point runs</dt>
-              <dd>{stats.perfectRuns}</dd>
-            </div>
-            <div>
-              <dt>Daily rounds solved / failed</dt>
+          )}
+        </section>
+        <aside className="stats-aside">
+          <h2 className="eyebrow">SOLVE RATE</h2>
+          <strong className="stat-number">{stats.winRate}%</strong>
+          <p>Average attempts</p>
+          <strong className="stat-average">
+            {stats.averageAttempts.toFixed(1)}
+          </strong>
+        </aside>
+      </div>
+      <details className="quiet-details">
+        <summary>The daily ledger</summary>
+        <dl className="stat-list">
+          <div>
+            <dt>Daily Runs started / completed</dt>
+            <dd>
+              {stats.dailyStarted} / {stats.dailyCompleted}
+            </dd>
+          </div>
+          <div>
+            <dt>Fully solved Daily Runs</dt>
+            <dd>{stats.fullySolved}</dd>
+          </div>
+          <div>
+            <dt>Perfect 500-point runs</dt>
+            <dd>{stats.perfectRuns}</dd>
+          </div>
+          <div>
+            <dt>Daily rounds solved / failed</dt>
+            <dd>
+              {stats.roundsSolved} / {stats.roundsFailed}
+            </dd>
+          </div>
+          <div>
+            <dt>Total daily points</dt>
+            <dd>{stats.totalPoints.toLocaleString()}</dd>
+          </div>
+        </dl>
+        <p className="muted">
+          Finish all three daily rounds to build your streak, even when a round
+          goes unsolved. Practice and archive play do not extend it.
+        </p>
+        <h3>Guesses used in solved daily rounds</h3>
+        <ol className="distribution-list">
+          {stats.distribution.map((count, i) => (
+            <li key={i}>
+              <span>
+                {i + 1} {i === 0 ? "guess" : "guesses"}
+              </span>
+              <strong>{count} solves</strong>
+            </li>
+          ))}
+        </ol>
+      </details>
+      <details className="quiet-details">
+        <summary>Practice & all-mode records</summary>
+        <p>{stats.practiceCompleted} practice rounds completed.</p>
+        <dl className="stat-list">
+          {(["easy", "medium", "hard"] as const).map((difficulty) => (
+            <div key={difficulty}>
+              <dt>{difficulty[0].toUpperCase() + difficulty.slice(1)}</dt>
               <dd>
-                {stats.roundsSolved} / {stats.roundsFailed}
+                {stats.practiceByDifficulty[difficulty].solved} solved ·{" "}
+                {stats.practiceByDifficulty[difficulty].completed} completed ·
+                best {stats.practiceByDifficulty[difficulty].bestScore}
               </dd>
             </div>
-            <div>
-              <dt>Average guesses to solve</dt>
-              <dd>{stats.averageAttempts.toFixed(1)}</dd>
-            </div>
-            <div>
-              <dt>Total daily points</dt>
-              <dd>{stats.totalPoints.toLocaleString()}</dd>
-            </div>
-          </dl>
-          <p className="muted">
-            Finishing all three daily rounds builds your streak, even when a
-            round goes unsolved. Archive and practice do not extend it.
-          </p>
-        </section>
-        <section className="panel stack">
-          <h2>A way with words</h2>
-          <p className="muted">
-            Guesses used in solved daily rounds. Labels show the exact number of
-            solves.
-          </p>
-          <div
-            className="distribution"
-            role="img"
-            aria-label={`Solved round distribution: ${stats.distribution.map((n, i) => `${i + 1} guesses: ${n}`).join("; ")}`}
-          >
-            {stats.distribution.map((count, i) => (
-              <div className="distribution-row" key={i}>
-                <span>{i + 1}</span>
-                <div className="distribution-track">
-                  <span
-                    className="distribution-bar"
-                    style={{
-                      width: `${Math.max(count ? 8 : 0, (count / maxAttempts) * 100)}%`,
-                    }}
-                  />
-                </div>
-                <strong>{count}</strong>
-              </div>
-            ))}
-          </div>
-        </section>
-      </div>
-      <section className="panel stack">
-        <div>
-          <p className="eyebrow">EVERY WAY THROUGH</p>
-          <h2>Across your notebook</h2>
-        </div>
-        <p>
-          Daily, practice, and friend challenges together. Archive replays stay
-          outside these totals.
+          ))}
+        </dl>
+        <h3>Across your notebook</h3>
+        <p className="muted">
+          Daily, practice, and friend challenges. Archive replays are excluded.
         </p>
         <dl className="stat-list">
           <div>
@@ -141,7 +159,7 @@ export function StatsScreen({ save }: { save: Save }) {
             <dd>{stats.overallAverageAttempts.toFixed(1)}</dd>
           </div>
           <div>
-            <dt>Points across game modes</dt>
+            <dt>Total points</dt>
             <dd>{stats.totalPointsAllModes.toLocaleString()}</dd>
           </div>
           <div>
@@ -149,126 +167,110 @@ export function StatsScreen({ save }: { save: Save }) {
             <dd>{stats.hintsUsed}</dd>
           </div>
         </dl>
-      </section>
-      <section className="panel stack">
-        <div>
-          <p className="eyebrow">OFF THE CLOCK</p>
-          <h2>Practice notebook</h2>
-        </div>
-        <p>
-          {stats.practiceCompleted} practice rounds completed. Practice records
-          stay separate from the Daily Run.
-        </p>
-        <div className="grid">
-          {(["easy", "medium", "hard"] as const).map((difficulty) => {
-            const item = stats.practiceByDifficulty[difficulty];
-            return (
-              <div className="metric" key={difficulty}>
-                <h3>{difficulty[0].toUpperCase() + difficulty.slice(1)}</h3>
-                <p>
-                  {item.solved} solved · {item.completed} completed
-                </p>
-                <p className="muted">Best score: {item.bestScore}</p>
-              </div>
-            );
-          })}
-        </div>
-      </section>
-      <section className="panel stack">
-        <h2>Recent daily history</h2>
-        {stats.recent.length ? (
+      </details>
+      {stats.recent.length > 0 && (
+        <details className="quiet-details">
+          <summary>Recent daily history</summary>
           <ul className="history-list">
-            {stats.recent
-              .filter((run) => run.mode === "daily")
-              .slice(0, 14)
-              .map((run) => (
-                <li className="history-row" key={run.id}>
-                  <span>{displayDate(run.date)}</span>
-                  <span>
-                    {
-                      run.rounds.filter((round) => round.status === "solved")
-                        .length
-                    }{" "}
-                    / 3 solved
-                  </span>
-                  <strong>{totalScore(run)} / 500</strong>
-                  <span className="muted">
-                    {run.completedAt ? "Complete" : "In progress"}
-                  </span>
-                </li>
-              ))}
+            {stats.recent.slice(0, 30).map((run) => (
+              <li className="history-row" key={run.id}>
+                <span>{displayDate(run.date)}</span>
+                <span>
+                  {
+                    run.rounds.filter((round) => round.status === "solved")
+                      .length
+                  }
+                  /3 solved
+                </span>
+                <strong>{totalScore(run)}/500</strong>
+              </li>
+            ))}
           </ul>
-        ) : (
-          <p className="muted">Your first Daily Run will start the story.</p>
-        )}
-      </section>
-      <p className="muted">
-        {stats.achievementsEarned} achievements earned. Explore your collection
-        in Achievements.
-      </p>
+        </details>
+      )}
+      <nav className="supporting-nav" aria-label="Statistics links">
+        <a href="#/achievements">
+          Achievements · {stats.achievementsEarned} earned
+        </a>
+        <a href="#/archive">View past daily runs</a>
+      </nav>
     </section>
   );
 }
 
 export function AchievementsScreen({ save }: { save: Save }) {
   const stats = getStats(save);
+  const [earnedOnly, setEarnedOnly] = useState(false);
+  const visible = ACHIEVEMENTS.filter(
+    (item) => !earnedOnly || save.achievements[item.id],
+  );
   return (
-    <section className="stack" aria-labelledby="achievements-heading">
-      <header className="page-heading">
-        <p className="eyebrow">SMALL VICTORIES</p>
-        <h1 id="achievements-heading">Marks of a curious mind.</h1>
-        <p className="muted">
-          A collection earned through real play.{" "}
-          {Object.keys(save.achievements).length} of {ACHIEVEMENTS.length}{" "}
-          unlocked.
-        </p>
+    <section
+      className="quiet-page achievements-page"
+      aria-labelledby="achievements-heading"
+    >
+      <header className="quiet-heading">
+        <p className="eyebrow">PERSONAL JOURNAL</p>
+        <h1 id="achievements-heading">Milestones.</h1>
+        <p className="editorial">Small victories worth keeping.</p>
       </header>
-      <div className="achievement-grid">
-        {ACHIEVEMENTS.map((achievement) => {
-          const unlocked = save.achievements[achievement.id];
-          const progress = Math.min(
-            achievement.target,
-            achievement.progress(stats),
-          );
+      <div className="list-heading">
+        <span className="eyebrow accent">
+          EARNED&nbsp; {Object.keys(save.achievements).length} /{" "}
+          {ACHIEVEMENTS.length}
+        </span>
+        <button
+          className="text-button"
+          aria-pressed={earnedOnly}
+          onClick={() => setEarnedOnly(!earnedOnly)}
+        >
+          {earnedOnly ? "View all" : "Earned only"}
+        </button>
+      </div>
+      <ul className="achievement-list">
+        {visible.map((item) => {
+          const unlocked = save.achievements[item.id];
+          const progress = Math.min(item.target, item.progress(stats));
           return (
-            <article
-              className={`panel achievement-card ${unlocked ? "unlocked" : "locked"}`}
-              key={achievement.id}
+            <li
+              className={`achievement-row ${unlocked ? "earned" : "locked"}`}
+              key={item.id}
             >
-              <span className="achievement-symbol" aria-hidden="true">
-                {achievement.symbol}
+              <span
+                className="achievement-status"
+                aria-label={unlocked ? "Earned" : "Locked"}
+              >
+                {unlocked ? "✓" : "○"}
               </span>
-              <div>
-                <p className="eyebrow">
-                  {unlocked ? "EARNED" : "IN THE MAKING"}
-                </p>
-                <h2>{achievement.name}</h2>
-                <p>{achievement.description}</p>
+              <h2 className="achievement-name">{item.name}</h2>
+              <p className="achievement-description">{item.description}</p>
+              <div className="achievement-progress">
                 {unlocked ? (
-                  <p className="muted">
-                    Unlocked{" "}
-                    {new Intl.DateTimeFormat(undefined, {
-                      dateStyle: "medium",
-                    }).format(new Date(unlocked))}
-                  </p>
-                ) : (
                   <>
-                    <progress
-                      className="achievement-progress"
-                      value={progress}
-                      max={achievement.target}
-                      aria-label={`${achievement.name} progress`}
-                    />
-                    <p className="muted">
-                      {progress} / {achievement.target}
-                    </p>
+                    <span className="success">Earned</span>
+                    <time dateTime={unlocked}>
+                      {new Intl.DateTimeFormat(undefined, {
+                        dateStyle: "medium",
+                      }).format(new Date(unlocked))}
+                    </time>
                   </>
+                ) : (
+                  <span>
+                    {progress ? `${progress} / ${item.target}` : "Locked"}
+                  </span>
                 )}
               </div>
-            </article>
+            </li>
           );
         })}
-      </div>
+      </ul>
+      {visible.length === 0 && (
+        <p className="empty-state">
+          Your first milestone is still ahead. Every puzzle is a chance to find
+          it.
+        </p>
+      )}
+      <p className="supporting-nav">Based on saved progress on this device.</p>
     </section>
   );
 }
@@ -292,54 +294,136 @@ export function ArchiveScreen({
       .toISOString()
       .slice(0, 10),
   );
+  const [selected, setSelected] = useState(dates[0]);
+  const selectedDate = dates.includes(selected) ? selected : dates[0];
+  function records(date: string) {
+    const official = Object.values(save.runs).find(
+      (run) => run.mode === "daily" && run.date === date,
+    );
+    const archive = Object.values(save.runs)
+      .filter((run) => run.mode === "archive" && run.date === date)
+      .at(-1);
+    return { official, archive, record: official ?? archive };
+  }
+  const { official, archive, record } = records(selectedDate);
+  const roundNames = ["Warm-Up", "The Stretch", "The Loophole"];
   return (
-    <section className="stack" aria-labelledby="archive-heading">
-      <header className="page-heading">
-        <p className="eyebrow">THE BACK ISSUES</p>
-        <h1 id="archive-heading">Good puzzles keep.</h1>
-        <p className="muted">
-          Revisit the last 30 days. Archive sessions have their own records and
-          never change your official daily score or streak.
-        </p>
+    <section
+      className="quiet-page archive-page"
+      aria-labelledby="archive-heading"
+    >
+      <header className="quiet-heading">
+        <p className="eyebrow">PAST PUZZLES</p>
+        <h1 id="archive-heading">The archive.</h1>
+        <p className="editorial">A different loophole for every day.</p>
       </header>
-      <div className="archive-grid">
-        {dates.map((date) => {
-          const official = Object.values(save.runs).find(
-            (run) => run.mode === "daily" && run.date === date,
-          );
-          const archive = Object.values(save.runs)
-            .filter((run) => run.mode === "archive" && run.date === date)
-            .at(-1);
-          return (
-            <article className="panel archive-card" key={date}>
-              <p className="eyebrow">ARCHIVE EDITION</p>
-              <h2>{displayDate(date)}</h2>
-              <p className="muted">
-                {official?.completedAt
-                  ? `Official record: ${totalScore(official)} / 500`
-                  : official
-                    ? "Official run unfinished"
-                    : "No official result"}
-              </p>
-              {archive && (
-                <p>
-                  {archive.completedAt
-                    ? `Archive record: ${archive.rounds.reduce((sum, round) => sum + scoreRound(round), 0)} / 500`
-                    : "Archive session in progress"}
-                </p>
-              )}
-              <button className="button secondary" onClick={() => onPlay(date)}>
-                {archive?.completedAt
-                  ? "Replay this edition"
-                  : archive
-                    ? "Continue archive"
-                    : "Play this edition"}
-                <span aria-hidden="true"> →</span>
-              </button>
-            </article>
-          );
-        })}
+      <div className="archive-layout">
+        <section aria-label="Last 30 daily challenges">
+          <h2 className="eyebrow">
+            {displayDate(dates[0], {
+              month: "long",
+              day: undefined,
+              year: "numeric",
+            }).toUpperCase()}
+          </h2>
+          <div className="archive-list">
+            {dates.map((date) => {
+              const item = records(date).record;
+              const complete = item && isComplete(item);
+              const fullySolved =
+                complete &&
+                item.rounds.every((round) => round.status === "solved");
+              return (
+                <button
+                  type="button"
+                  className={`archive-date ${date === selectedDate ? "selected" : ""}`}
+                  aria-pressed={date === selectedDate}
+                  onClick={() => setSelected(date)}
+                  key={date}
+                >
+                  <span>{displayDate(date)}</span>
+                  <span className={fullySolved ? "success" : "muted"}>
+                    {complete
+                      ? fullySolved
+                        ? "Solved"
+                        : "Completed"
+                      : item
+                        ? "In progress"
+                        : "Not played"}
+                  </span>
+                  <span className="muted">
+                    {complete ? `${totalScore(item)} / 500` : "—"}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </section>
+        <aside className="archive-detail">
+          <h2 className="eyebrow">SELECTED DATE</h2>
+          <p className="archive-selected-date">
+            {displayDate(selectedDate, {
+              weekday: "long",
+              month: "long",
+              year: undefined,
+            }).toUpperCase()}
+          </p>
+          <strong className="archive-score">
+            {record && isComplete(record)
+              ? `${totalScore(record)} / 500`
+              : "Not played yet"}
+          </strong>
+          {record ? (
+            <ul className="archive-rounds">
+              {record.rounds.map((round, i) => (
+                <li
+                  className={round.status === "solved" ? "success" : ""}
+                  key={i}
+                >
+                  <span>{roundNames[i]}</span>
+                  <span>
+                    {round.status === "solved"
+                      ? "✓"
+                      : round.status === "failed"
+                        ? "×"
+                        : "—"}
+                  </span>
+                  <span className="sr-only">
+                    {round.status} · {scoreRound(round)} points
+                  </span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="editorial">Three puzzles waiting to be found.</p>
+          )}
+          <button onClick={() => onPlay(selectedDate)}>
+            {archive?.completedAt
+              ? "Replay this edition"
+              : archive
+                ? "Continue archive"
+                : record
+                  ? "Replay this day"
+                  : "Play this edition"}
+          </button>
+          {official && (
+            <p className="archive-record-note">
+              {official.completedAt
+                ? `Official record: ${totalScore(official)} / 500`
+                : "Your official run remains unfinished."}{" "}
+              Archive play keeps its own record.
+            </p>
+          )}
+          {archive && official && archive.completedAt && (
+            <p className="muted">
+              Latest archive result: {totalScore(archive)} / 500
+            </p>
+          )}
+        </aside>
       </div>
+      <p className="supporting-nav">
+        Archived games do not count toward your current streak.
+      </p>
     </section>
   );
 }

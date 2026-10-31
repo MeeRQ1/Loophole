@@ -28,4 +28,13 @@ All modes use precisely the same accepted-word set. Any accepted word satisfying
 
 ## Other assets
 
-The original Loophole geometric mark and interface artwork are generated in this repository. System font stacks require no downloaded third-party font assets. React, Vite and test-tool dependencies carry their own package licenses in `node_modules`; no remote analytics, advertising, or tracking code is included.
+The original Loophole geometric mark and interface artwork are generated in this repository. DM Sans and Instrument Serif are self-hosted under the OFL notices below, with system fallbacks. React, Vite and test-tool dependencies carry their own package licenses in `node_modules`; no remote analytics, advertising, or tracking code is included.
+
+## Quiet interface typography
+
+The redesigned interface self-hosts the following fonts. Font loading makes no requests to Google Fonts or another third-party host. Local/system fallbacks remain available while fonts load or if a font fails.
+
+- **DM Sans**, copyright 2014 The DM Sans Project Authors. Source: https://github.com/googlefonts/dm-fonts at commit `d0520ba03bd780f5dccb3024854463d44f699b78`, file `Sans/fonts/variable/DMSans[opsz,wght].ttf`. Licensed under the SIL Open Font License 1.1; complete notice in [docs/licenses/DM-Sans-OFL.txt](docs/licenses/DM-Sans-OFL.txt). The original optical-size and weight axes and all 486 glyphs are preserved in `public/fonts/dm-sans-variable.woff2`.
+- **Instrument Serif**, copyright 2022 The Instrument Serif Project Authors. Source: https://github.com/Instrument/instrument-serif at commit `65c0ef225f386a3c7e87570a4aa9cc0262c2fd81`, files `fonts/ttf/InstrumentSerif-Regular.ttf` and `fonts/ttf/InstrumentSerif-Italic.ttf`. Licensed under the SIL Open Font License 1.1; complete notice in [docs/licenses/Instrument-Serif-OFL.txt](docs/licenses/Instrument-Serif-OFL.txt). All 377 glyphs in each style are preserved in the corresponding `public/fonts/instrument-serif-regular.woff2` and `public/fonts/instrument-serif-italic.woff2` files.
+
+The font binaries were converted losslessly from TTF to WOFF2 with fontTools; their Unicode character maps and font names are unchanged. They include Latin and Latin Extended glyphs. Unsupported interface symbols use the system fallback stack. No font is required from an external host at runtime.

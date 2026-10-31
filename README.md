@@ -1,6 +1,8 @@
 # Loophole
 
-A daily word puzzle game where one word must satisfy multiple rules.
+One word. Every rule. A daily word puzzle game where one word must satisfy multiple rules.
+
+The interface follows the approved Quiet Interface Exploration, using self-hosted DM Sans and Instrument Serif, a narrow puzzle stage, restrained dark/light themes, and responsive navigation. See the [visual review](docs/visual-verification.md) for all 18 screen comparisons and the [difficulty report](docs/difficulty-report.md) for the audit, quality gates, compatibility policy, and nine verified puzzle examples.
 
 **Any accepted English word that satisfies every rule wins.** There is no hidden target word. Loophole is a static React + TypeScript game built with Vite, with no account, API key, database, advertising, or tracking.
 
@@ -12,7 +14,7 @@ The Daily Run has three rounds: **Warm-Up** (three rules), **The Stretch** (four
 
 Vowels mean **A, E, I, O, U**. Y is a consonant. Repeated letters need not be adjacent; an adjacent pair specifically means neighboring identical letters. Displayed letter positions start at one. All engine evaluation uses lowercase words.
 
-A **Nudge** reveals the starting letter of one possible common answer. It never requires that particular answer. One Nudge is allowed per round; its penalty is shown before activation.
+A **Nudge** reveals the starting letter of one possible common answer, or an informative verified letter position/ending if the first letter is already revealed by the rules. It never requires that particular answer. One Nudge is allowed per round; its penalty is shown before activation.
 
 | Round | First-guess maximum | Per earlier valid guess | Nudge penalty | Successful minimum |
 | --- | ---: | ---: | ---: | ---: |
@@ -63,15 +65,16 @@ The broad accepted dictionary and the smaller common-word quality dictionary are
 
 The engine supports length, letter placement, inclusion and exclusion, two-letter sequences, vowels, repeated and distinct letters, and relationships between first and last letters. The same typed definitions and evaluator are used in gameplay, generation, challenge creation, and tests.
 
-The 396-day daily bank starts October 1, 2026, covering the 30-day archive and a full year ahead of the October 31 launch. It contains 1,188 validated puzzles and is checked in so released dates stay stable. Each date maps to a deterministic easy/medium/hard set. Puzzles originate from verified solutions, are measured against common vocabulary, and are checked for invalid or redundant rules. A deterministic fallback keeps dates outside the stored schedule playable.
+The original 396-day bank starting October 1, 2026 remains unchanged for compatibility. A calibrated v2 schedule starts November 1, 2026 with 366 days / 1,098 new puzzles. Historical dates through October 31 keep their original definitions, and saved runs always retain their embedded puzzles. Future days and all Practice use the calibrated pool. Both banks are checked in so released date mappings remain stable. Each date maps to a deterministic easy/medium/hard set. Puzzles originate from verified solutions, are measured against common vocabulary, and are checked for invalid or redundant rules. A deterministic fallback keeps dates outside the stored schedule playable.
 
 ```sh
 npm run generate:puzzles
 npm run validate:puzzles
+npm run audit:difficulty
 npm test
 ```
 
-Treat published dates as immutable: generation must append future content rather than replace released entries. Review generated data changes and run the full validation before deployment. For example, `PUZZLE_DAYS=732 npm run generate:puzzles` appends a second year while preserving existing puzzle entries. Do not hand-edit hundreds of puzzle entries or change evaluator semantics without versioning content and challenge formats.
+Treat published dates as immutable: generation must append future content rather than replace released entries. Review generated data changes and run the full validation before deployment. For example, `PUZZLE_DAYS=732 npm run generate:puzzles` appends a second year of v2 content while preserving all existing entries. Do not hand-edit hundreds of puzzle entries or change evaluator semantics without versioning content and challenge formats.
 
 ## Architecture
 
@@ -81,6 +84,8 @@ Treat published dates as immutable: generation must append future content rather
 | `src/engine/rules.ts` | Authoritative descriptions and evaluation |
 | `src/engine/dictionary.ts` | Offline word normalization and lookup |
 | `src/engine/puzzles.ts` | Daily schedule, practice selection, UTC identity |
+| `src/engine/difficulty.ts` | Measured cognitive-load, length, familiarity, and solution-count gates |
+| `src/engine/hints.ts` | Verified, nonredundant, deterministic Nudges |
 | `src/engine/challenges.ts` | Validated, bounded, versioned share URLs |
 | `src/engine/game.ts` | Guesses, attempts, hints, scoring and progression |
 | `src/engine/storage.ts` | Versioned persistence, validation and migration |
@@ -133,6 +138,6 @@ Tagging does not itself deploy a different Pages version; the deployment tracks 
 
 ## Limitations
 
-The bundled offline lexicon and puzzle content currently produce about 840 KB of compressed core JavaScript, plus small lazy-loaded screens. This trades a larger first visit for self-contained offline play. English word lists can disagree on rare words and regional inflections; the documented offline accepted list is authoritative for this release. Local progress is device-specific. Native sharing, PWA installation, sound autoplay permissions, and clipboard availability depend on browser capabilities. No global leaderboard, server account, cross-device sync, or multiplayer service is implied.
+The broad offline lexicon and both versioned content banks dominate the first-load JavaScript size (currently about 940 KB compressed); Vite prints the exact size. Secondary screens are lazy-loaded. This trades a larger first visit for self-contained offline play. English word lists can disagree on rare words and regional inflections; the documented offline accepted list is authoritative for this release. Local progress is device-specific. Native sharing, PWA installation, sound autoplay permissions, and clipboard availability depend on browser capabilities. No global leaderboard, server account, cross-device sync, or multiplayer service is implied.
 
-Third-party word-list attribution is in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). The visual mark, icon, and social artwork in `public/` are original project assets. Interface typography uses local/system fallbacks and does not require a third-party font request to play.
+Third-party word-list attribution is in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). The visual mark, icon, and social artwork in `public/` are original project assets. Interface typography self-hosts DM Sans and Instrument Serif under their OFL licenses, with system fallbacks and offline font caching. No third-party font request is required.

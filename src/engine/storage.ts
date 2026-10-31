@@ -31,7 +31,7 @@ export function defaultSave(): Save {
   return {
     version: 2,
     runs: {},
-    settings: { theme: "system", contrast: false, motion: true, sound: false },
+    settings: { theme: "dark", contrast: false, motion: true, sound: false },
     onboarding: false,
     achievements: {},
     practiceIndex: 0,

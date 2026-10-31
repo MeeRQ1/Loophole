@@ -1,0 +1,53 @@
+{
+  "easy": {
+    "common": [
+      40,
+      108,
+      247
+    ],
+    "lengths": [
+      4,
+      6
+    ],
+    "familiarMin": 6,
+    "score": [
+      6.54,
+      17.34
+    ],
+    "structures": 27
+  },
+  "medium": {
+    "common": [
+      15,
+      34,
+      70
+    ],
+    "lengths": [
+      4,
+      7
+    ],
+    "familiarMin": 0,
+    "score": [
+      18.07,
+      36.65
+    ],
+    "structures": 108
+  },
+  "hard": {
+    "common": [
+      5,
+      11,
+      30
+    ],
+    "lengths": [
+      4,
+      9
+    ],
+    "familiarMin": 0,
+    "score": [
+      40.16,
+      78.99
+    ],
+    "structures": 202
+  }
+}

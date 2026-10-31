@@ -80,15 +80,15 @@ export function downloadCard(run: Run, streak: number): void {
   canvas.height = 760;
   const context = canvas.getContext("2d");
   if (!context) throw new Error("Image export is unavailable in this browser.");
-  context.fillStyle = "#f7f3ea";
+  context.fillStyle = "#11191b";
   context.fillRect(0, 0, 1200, 760);
-  context.strokeStyle = "#dcd7cb";
+  context.strokeStyle = "#39484c";
   context.lineWidth = 2;
   context.strokeRect(36, 36, 1128, 688);
-  context.fillStyle = "#232823";
-  context.font = "bold 92px Georgia, serif";
+  context.fillStyle = "#e8eceb";
+  context.font = '600 76px "DM Sans", sans-serif';
   context.fillText("loophole.", 88, 155);
-  context.fillStyle = "#9c472f";
+  context.fillStyle = "#9db1b8";
   context.font = "23px monospace";
   context.fillText(`${run.mode.toUpperCase()} · ${run.date}`, 92, 210);
   const maximum = run.rounds.reduce(
@@ -96,22 +96,22 @@ export function downloadCard(run: Run, streak: number): void {
       total + { easy: 100, medium: 150, hard: 250 }[round.puzzle.difficulty],
     0,
   );
-  context.fillStyle = "#232823";
-  context.font = "bold 145px Georgia, serif";
+  context.fillStyle = "#e8eceb";
+  context.font = '600 125px "DM Sans", sans-serif';
   context.fillText(String(totalScore(run)), 85, 410);
-  context.font = "34px Georgia, serif";
+  context.font = '34px "DM Sans", sans-serif';
   context.fillText(`/ ${maximum} points`, 400, 400);
-  context.font = "26px sans-serif";
+  context.font = '26px "DM Sans", sans-serif';
   run.rounds.forEach((round, index) => {
     const y = 478 + index * 49;
-    context.fillStyle = round.status === "solved" ? "#47624c" : "#6b625a";
+    context.fillStyle = round.status === "solved" ? "#a4c9a5" : "#c88982";
     context.fillText(
       `${index + 1}. ${round.status === "solved" ? "SOLVED" : round.status === "failed" ? "NOT SOLVED" : "IN PROGRESS"} · ${round.guesses.length}/6 guesses · ${scoreRound(round)} points${round.hint ? " · nudge used" : ""}`,
       92,
       y,
     );
   });
-  context.fillStyle = "#232823";
+  context.fillStyle = "#e8eceb";
   context.font = "21px monospace";
   context.fillText(
     run.mode === "daily" ? `${streak} day streak` : "Any word. Every rule.",

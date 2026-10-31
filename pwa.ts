@@ -14,6 +14,9 @@ export function offlinePlugin(): Plugin {
         "favicon.svg",
         "icon-192.png",
         "icon-512.png",
+        "fonts/dm-sans-variable.woff2",
+        "fonts/instrument-serif-regular.woff2",
+        "fonts/instrument-serif-italic.woff2",
         ...Object.keys(bundle).filter(
           (path) => !path.endsWith(".map") && path !== "sw.js",
         ),

@@ -1,0 +1,16 @@
+Vendored fonts (lossless WOFF2 conversion; no glyph subsetting)
+
+DM Sans:
+https://raw.githubusercontent.com/googlefonts/dm-fonts/d0520ba03bd780f5dccb3024854463d44f699b78/Sans/fonts/variable/DMSans%5Bopsz%2Cwght%5D.ttf
+License: docs/licenses/DM-Sans-OFL.txt
+SHA256 WOFF2: 40c3837c53c103a38fbce7faaa590b76edd61a8ede14672eb1e2f7eab0e0c6a4
+
+Instrument Serif Regular:
+https://raw.githubusercontent.com/Instrument/instrument-serif/65c0ef225f386a3c7e87570a4aa9cc0262c2fd81/fonts/ttf/InstrumentSerif-Regular.ttf
+License: docs/licenses/Instrument-Serif-OFL.txt
+SHA256 WOFF2: ca21b99b0d6b88a0dc34cebfe48104611e5c7f8f92746bed26c37aa470174322
+
+Instrument Serif Italic:
+https://raw.githubusercontent.com/Instrument/instrument-serif/65c0ef225f386a3c7e87570a4aa9cc0262c2fd81/fonts/ttf/InstrumentSerif-Italic.ttf
+License: docs/licenses/Instrument-Serif-OFL.txt
+SHA256 WOFF2: 4f7aacc18d491dea8778bbc591db87b9455625899ed5f913957e7fd82604c294

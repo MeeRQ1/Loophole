@@ -1,0 +1,551 @@
+{
+  "schemaVersion": 1,
+  "auditedBankVersion": 1,
+  "start": "2026-10-01",
+  "days": 396,
+  "totalPuzzles": 1188,
+  "commonVocabularySize": 10000,
+  "familiarityMethod": "1-based rank in vendored common.json, retained in descending source frequency order. Rank is a proxy, not a human familiarity measurement.",
+  "levels": {
+    "easy": {
+      "puzzleCount": 396,
+      "ruleCountDistribution": {
+        "3": 396
+      },
+      "exactLengthConstraintDistribution": {
+        "3": 3,
+        "4": 16,
+        "5": 22,
+        "6": 20,
+        "7": 25,
+        "8": 19,
+        "9": 16,
+        "10": 4,
+        "11": 8,
+        "12": 3
+      },
+      "puzzlesWithoutExactLength": 260,
+      "commonSolutionCount": {
+        "min": 40,
+        "median": 125,
+        "max": 250,
+        "mean": 132.18
+      },
+      "storedAcceptedSolutionCount": {
+        "min": 179,
+        "median": 2667,
+        "max": 19406,
+        "mean": 3495.65
+      },
+      "commonSolutionLengthIncidences": {
+        "3": 1232,
+        "4": 4806,
+        "5": 6130,
+        "6": 7257,
+        "7": 8288,
+        "8": 8797,
+        "9": 6784,
+        "10": 3977,
+        "11": 3310,
+        "12": 1763
+      },
+      "minimumSolutionLengthPerPuzzle": {
+        "min": 3,
+        "median": 6,
+        "max": 12,
+        "mean": 5.71
+      },
+      "maximumSolutionLengthPerPuzzle": {
+        "min": 3,
+        "median": 10,
+        "max": 12,
+        "mean": 9.18
+      },
+      "top2000SolutionCount": {
+        "min": 3,
+        "median": 20,
+        "max": 92,
+        "mean": 24.12
+      },
+      "top3000SolutionCount": {
+        "min": 6,
+        "median": 33,
+        "max": 119,
+        "mean": 37.42
+      },
+      "puzzlesWithNoTop2000Solutions": 0,
+      "puzzlesWithFewerThanFiveTop2000Solutions": 11,
+      "fiveMostFrequentSolutionAverageRank": {
+        "min": 12.2,
+        "median": 440.6,
+        "max": 1929.2,
+        "mean": 502.3
+      },
+      "ruleTypeFrequency": {
+        "distinct": 79,
+        "length": 136,
+        "position": 82,
+        "maxLength": 51,
+        "starts": 143,
+        "noSequence": 22,
+        "minLength": 35,
+        "endsConsonant": 36,
+        "unique": 20,
+        "contains": 111,
+        "excludes": 111,
+        "distinctVowels": 43,
+        "ends": 49,
+        "hasVowel": 34,
+        "differentEnds": 38,
+        "repeated": 19,
+        "startsVowel": 14,
+        "vowels": 61,
+        "noVowel": 38,
+        "minVowels": 25,
+        "adjacent": 15,
+        "sequence": 26
+      },
+      "ruleStructureCount": 235,
+      "duplicateRuleSignatures": 0,
+      "redundantPuzzles": 0,
+      "impossiblePuzzles": 0,
+      "commonCountMetadataMismatches": 0,
+      "puzzlesForcingMoreThanSixLetters": 137,
+      "puzzlesWithAnySolutionOutsideFourToSixLetters": 337,
+      "positionRulePuzzles": 82,
+      "distinctLetterRulePuzzles": 79,
+      "exactVowelCountRulePuzzles": 61,
+      "distinctVowelRulePuzzles": 43,
+      "repeatedLetterConditionPuzzles": 54,
+      "multipleNegativeRulePuzzles": 6,
+      "examples": [
+        {
+          "id": "v1-easy-1",
+          "date": "2026-10-01",
+          "rules": [
+            "Exactly 6 distinct letters",
+            "Exactly 7 letters",
+            "Letter 5 is I"
+          ],
+          "commonCount": 177,
+          "frequentSolutions": [
+            "looking",
+            "nothing",
+            "service",
+            "morning",
+            "meeting"
+          ],
+          "solutionLengthRange": [
+            7,
+            7
+          ]
+        },
+        {
+          "id": "v1-easy-4",
+          "date": "2026-10-04",
+          "rules": [
+            "Ends with a consonant",
+            "Exactly 7 distinct letters",
+            "Begins with P"
+          ],
+          "commonCount": 144,
+          "frequentSolutions": [
+            "problem",
+            "playing",
+            "probably",
+            "players",
+            "political"
+          ],
+          "solutionLengthRange": [
+            7,
+            11
+          ]
+        },
+        {
+          "id": "v1-easy-6",
+          "date": "2026-10-06",
+          "rules": [
+            "No letter H",
+            "Letter 1 is C",
+            "Exactly 11 letters"
+          ],
+          "commonCount": 70,
+          "frequentSolutions": [
+            "competition",
+            "communities",
+            "comfortable",
+            "considering",
+            "combination"
+          ],
+          "solutionLengthRange": [
+            11,
+            11
+          ]
+        }
+      ]
+    },
+    "medium": {
+      "puzzleCount": 396,
+      "ruleCountDistribution": {
+        "4": 396
+      },
+      "exactLengthConstraintDistribution": {
+        "3": 5,
+        "4": 10,
+        "5": 33,
+        "6": 30,
+        "7": 22,
+        "8": 15,
+        "9": 13,
+        "10": 11,
+        "11": 5,
+        "12": 4
+      },
+      "puzzlesWithoutExactLength": 248,
+      "commonSolutionCount": {
+        "min": 15,
+        "median": 37,
+        "max": 70,
+        "mean": 38.8
+      },
+      "storedAcceptedSolutionCount": {
+        "min": 58,
+        "median": 741,
+        "max": 5904,
+        "mean": 1015.06
+      },
+      "commonSolutionLengthIncidences": {
+        "3": 406,
+        "4": 1157,
+        "5": 2309,
+        "6": 2265,
+        "7": 2408,
+        "8": 2204,
+        "9": 1867,
+        "10": 1496,
+        "11": 789,
+        "12": 464
+      },
+      "minimumSolutionLengthPerPuzzle": {
+        "min": 3,
+        "median": 6,
+        "max": 12,
+        "mean": 6.09
+      },
+      "maximumSolutionLengthPerPuzzle": {
+        "min": 3,
+        "median": 9,
+        "max": 12,
+        "mean": 8.68
+      },
+      "top2000SolutionCount": {
+        "min": 0,
+        "median": 6,
+        "max": 29,
+        "mean": 7.53
+      },
+      "top3000SolutionCount": {
+        "min": 0,
+        "median": 10,
+        "max": 34,
+        "mean": 11.46
+      },
+      "puzzlesWithNoTop2000Solutions": 12,
+      "puzzlesWithFewerThanFiveTop2000Solutions": 143,
+      "fiveMostFrequentSolutionAverageRank": {
+        "min": 17,
+        "median": 1028.8,
+        "max": 4020.4,
+        "mean": 1173.38
+      },
+      "ruleTypeFrequency": {
+        "vowels": 91,
+        "excludes": 182,
+        "position": 101,
+        "hasVowel": 52,
+        "noVowel": 71,
+        "length": 148,
+        "starts": 157,
+        "contains": 191,
+        "distinct": 94,
+        "noSequence": 40,
+        "sequence": 60,
+        "unique": 30,
+        "maxLength": 56,
+        "startsVowel": 12,
+        "distinctVowels": 60,
+        "endsConsonant": 41,
+        "ends": 79,
+        "adjacent": 13,
+        "differentEnds": 32,
+        "minVowels": 22,
+        "repeated": 30,
+        "minLength": 22
+      },
+      "ruleStructureCount": 326,
+      "duplicateRuleSignatures": 0,
+      "redundantPuzzles": 0,
+      "impossiblePuzzles": 0,
+      "commonCountMetadataMismatches": 0,
+      "puzzlesForcingMoreThanSixLetters": 151,
+      "puzzlesWithAnySolutionOutsideFourToSixLetters": 308,
+      "positionRulePuzzles": 101,
+      "distinctLetterRulePuzzles": 94,
+      "exactVowelCountRulePuzzles": 91,
+      "distinctVowelRulePuzzles": 60,
+      "repeatedLetterConditionPuzzles": 73,
+      "multipleNegativeRulePuzzles": 40,
+      "examples": [
+        {
+          "id": "v1-medium-1",
+          "date": "2026-10-01",
+          "rules": [
+            "Exactly 2 vowels",
+            "No letter S",
+            "Letter 4 is R",
+            "Contains the vowel E"
+          ],
+          "commonCount": 63,
+          "frequentSolutions": [
+            "there",
+            "over",
+            "where",
+            "year",
+            "every"
+          ],
+          "solutionLengthRange": [
+            4,
+            9
+          ]
+        },
+        {
+          "id": "v1-medium-2",
+          "date": "2026-10-02",
+          "rules": [
+            "No vowel E",
+            "Exactly 5 letters",
+            "Begins with T",
+            "Contains the letter H"
+          ],
+          "commonCount": 15,
+          "frequentSolutions": [
+            "think",
+            "thing",
+            "thank",
+            "third",
+            "truth"
+          ],
+          "solutionLengthRange": [
+            5,
+            5
+          ]
+        },
+        {
+          "id": "v1-medium-3",
+          "date": "2026-10-03",
+          "rules": [
+            "Contains the vowel E",
+            "Exactly 10 letters",
+            "Exactly 6 distinct letters",
+            "No AN sequence"
+          ],
+          "commonCount": 38,
+          "frequentSolutions": [
+            "conference",
+            "successful",
+            "connection",
+            "businesses",
+            "everywhere"
+          ],
+          "solutionLengthRange": [
+            10,
+            10
+          ]
+        }
+      ]
+    },
+    "hard": {
+      "puzzleCount": 396,
+      "ruleCountDistribution": {
+        "5": 396
+      },
+      "exactLengthConstraintDistribution": {
+        "3": 2,
+        "4": 8,
+        "5": 12,
+        "6": 23,
+        "7": 17,
+        "8": 32,
+        "9": 22,
+        "10": 6,
+        "11": 8,
+        "12": 2
+      },
+      "puzzlesWithoutExactLength": 264,
+      "commonSolutionCount": {
+        "min": 5,
+        "median": 15,
+        "max": 30,
+        "mean": 16.65
+      },
+      "storedAcceptedSolutionCount": {
+        "min": 14,
+        "median": 308,
+        "max": 2907,
+        "mean": 433.76
+      },
+      "commonSolutionLengthIncidences": {
+        "3": 111,
+        "4": 404,
+        "5": 805,
+        "6": 1012,
+        "7": 1171,
+        "8": 1263,
+        "9": 845,
+        "10": 518,
+        "11": 352,
+        "12": 112
+      },
+      "minimumSolutionLengthPerPuzzle": {
+        "min": 3,
+        "median": 6,
+        "max": 12,
+        "mean": 6.47
+      },
+      "maximumSolutionLengthPerPuzzle": {
+        "min": 3,
+        "median": 8,
+        "max": 12,
+        "mean": 8.51
+      },
+      "top2000SolutionCount": {
+        "min": 0,
+        "median": 3,
+        "max": 13,
+        "mean": 3.17
+      },
+      "top3000SolutionCount": {
+        "min": 0,
+        "median": 4,
+        "max": 16,
+        "mean": 4.88
+      },
+      "puzzlesWithNoTop2000Solutions": 44,
+      "puzzlesWithFewerThanFiveTop2000Solutions": 299,
+      "fiveMostFrequentSolutionAverageRank": {
+        "min": 66.2,
+        "median": 1967.6,
+        "max": 7652.8,
+        "mean": 2377.77
+      },
+      "ruleTypeFrequency": {
+        "distinct": 131,
+        "vowels": 114,
+        "hasVowel": 83,
+        "ends": 90,
+        "contains": 249,
+        "position": 111,
+        "endsConsonant": 62,
+        "excludes": 266,
+        "sequence": 79,
+        "noSequence": 57,
+        "length": 132,
+        "starts": 184,
+        "maxLength": 78,
+        "unique": 40,
+        "differentEnds": 34,
+        "repeated": 42,
+        "noVowel": 75,
+        "distinctVowels": 69,
+        "minLength": 34,
+        "adjacent": 23,
+        "minVowels": 17,
+        "startsVowel": 10
+      },
+      "ruleStructureCount": 368,
+      "duplicateRuleSignatures": 0,
+      "redundantPuzzles": 0,
+      "impossiblePuzzles": 0,
+      "commonCountMetadataMismatches": 0,
+      "puzzlesForcingMoreThanSixLetters": 185,
+      "puzzlesWithAnySolutionOutsideFourToSixLetters": 327,
+      "positionRulePuzzles": 111,
+      "distinctLetterRulePuzzles": 131,
+      "exactVowelCountRulePuzzles": 114,
+      "distinctVowelRulePuzzles": 69,
+      "repeatedLetterConditionPuzzles": 105,
+      "multipleNegativeRulePuzzles": 88,
+      "examples": [
+        {
+          "id": "v1-hard-1",
+          "date": "2026-10-01",
+          "rules": [
+            "Exactly 7 distinct letters",
+            "Exactly 2 vowels",
+            "Contains the vowel I",
+            "Ends with Y",
+            "Contains the letter T"
+          ],
+          "commonCount": 18,
+          "frequentSolutions": [
+            "history",
+            "victory",
+            "ministry",
+            "typically",
+            "charity"
+          ],
+          "solutionLengthRange": [
+            7,
+            9
+          ]
+        },
+        {
+          "id": "v1-hard-2",
+          "date": "2026-10-02",
+          "rules": [
+            "Contains the letter B",
+            "Contains the letter I",
+            "Letter 2 is A",
+            "Ends with a consonant",
+            "No letter T"
+          ],
+          "commonCount": 23,
+          "frequentSolutions": [
+            "basic",
+            "basis",
+            "basically",
+            "babies",
+            "banking"
+          ],
+          "solutionLengthRange": [
+            4,
+            9
+          ]
+        },
+        {
+          "id": "v1-hard-3",
+          "date": "2026-10-03",
+          "rules": [
+            "Contains DE together",
+            "Exactly 9 distinct letters",
+            "Ends with a consonant",
+            "No ST sequence",
+            "Exactly 10 letters"
+          ],
+          "commonCount": 14,
+          "frequentSolutions": [
+            "leadership",
+            "democratic",
+            "developing",
+            "federation",
+            "describing"
+          ],
+          "solutionLengthRange": [
+            10,
+            10
+          ]
+        }
+      ]
+    }
+  }
+}

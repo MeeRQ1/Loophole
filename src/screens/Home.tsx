@@ -1,164 +1,95 @@
 import { useEffect, useState } from "react";
-import { dateKey, dayNumber } from "../engine/puzzles";
+import { dateKey } from "../engine/puzzles";
 import { isComplete } from "../engine/game";
-import type { Run, Save } from "../engine/types";
-
-interface HomeProps {
+import type { Run, Save, Rule } from "../engine/types";
+import RuleList from "../components/RuleList";
+const example: Rule[] = [
+  { type: "length", value: 4 },
+  { type: "starts", value: "s" },
+  { type: "contains", value: "a" },
+];
+export default function Home({
+  today,
+  daily,
+  startDaily,
+}: {
   save: Save;
   today: string;
   daily?: Run;
   startDaily: () => void;
   onChange: (save: Save) => void;
-}
-
-function Countdown() {
+}) {
   const [now, setNow] = useState(Date.now());
   useEffect(() => {
-    const t = setInterval(() => setNow(Date.now()), 1000);
-    return () => clearInterval(t);
+    const id = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(id);
   }, []);
-  const seconds = Math.ceil(
-    (new Date(dateKey(new Date(now))).getTime() + 86400000 - now) / 1000,
+  const seconds = Math.max(
+    0,
+    Math.ceil(
+      (Date.parse(dateKey(new Date(now)) + "T00:00:00Z") + 86400000 - now) /
+        1000,
+    ),
   );
+  const countdown = [
+    Math.floor(seconds / 3600),
+    Math.floor((seconds % 3600) / 60),
+    seconds % 60,
+  ]
+    .map((n) => String(n).padStart(2, "0"))
+    .join(":");
+  const dateLabel = new Intl.DateTimeFormat(undefined, {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+    timeZone: "UTC",
+  }).format(new Date(today + "T12:00:00Z"));
   return (
-    <span className="mono">
-      {String(Math.floor(seconds / 3600)).padStart(2, "0")}:
-      {String(Math.floor((seconds % 3600) / 60)).padStart(2, "0")}:
-      {String(seconds % 60).padStart(2, "0")}
-    </span>
-  );
-}
-
-export default function Home({
-  save,
-  today,
-  daily,
-  startDaily,
-  onChange,
-}: HomeProps) {
-  return (
-    <div className="home">
-      <section className="home-intro">
+    <section className="quiet-home">
+      <header className="home-heading">
         <p className="eyebrow">
-          <span className="tiny-star">✳</span> A DAILY EXERCISE IN POSSIBILITY
+          <span className="desktop-only">LOOPHOLE / A </span>DAILY WORD PUZZLE
         </p>
         <h1>
-          A little wordplay.
-          <br />A <em>way through.</em>
+          One word.
+          <span className="mobile-break" /> Every rule.
         </h1>
-        <p className="intro-copy">
-          A handful of rules. A word that fits them all.
-          <br />
-          There’s always more than one way through.
+        <p className="editorial">
+          Find any English word that fits
+          <span className="mobile-break" /> every condition.
         </p>
-        <div className="brand-orbit" aria-hidden="true">
-          <span>o</span>
-          <i>→</i>
-          <small>
-            THINK OUTSIDE.
-            <br />
-            STAY WITHIN.
-          </small>
-        </div>
-      </section>
-      {!save.onboarding && (
-        <div className="onboarding-strip">
-          <div>
-            <strong>New here? You already know the words.</strong>
-            <p>We’ll show you how to make the rules work.</p>
-          </div>
-          <button
-            className="secondary"
-            onClick={() => (location.hash = "/help")}
-          >
-            A 15-second guide →
-          </button>
-          <button
-            className="text-button"
-            onClick={() => onChange({ ...save, onboarding: true })}
-          >
-            Skip
-          </button>
-        </div>
-      )}
-      <section className="daily-feature">
-        <div className="daily-card-top">
-          <span className="eyebrow">THE DAILY RUN</span>
-          <span className="edition">
-            NO. {String(dayNumber(today)).padStart(3, "0")}
-          </span>
-        </div>
-        <div className="daily-card-body">
-          <div>
-            <h2>
-              Three rounds.
-              <br />
-              One curious mind.
-            </h2>
-            <p>Start easy. Stretch a little. Find the loophole.</p>
-            <div className="daily-facts">
-              <span>3 puzzles</span>
-              <span>6 tries each</span>
-              <span>500 possible points</span>
-            </div>
-            <button onClick={startDaily}>
-              {daily
-                ? isComplete(daily)
-                  ? "See your results"
-                  : "Continue Daily Run"
-                : "Play Daily Run"}{" "}
-              <span>→</span>
-            </button>
-          </div>
-          <div className="daily-round-preview">
-            {["Warm-Up", "The Stretch", "The Loophole"].map((label, i) => (
-              <div key={label}>
-                <span className="mono">0{i + 1}</span>
-                <strong>{label}</strong>
-                <small>
-                  {daily?.rounds[i].status === "solved"
-                    ? "✓ Solved"
-                    : daily?.rounds[i].status === "failed"
-                      ? "× Not solved"
-                      : `${i + 3} rules`}
-                </small>
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className="daily-card-bottom">
-          <span>Fresh daily at midnight UTC</span>
-          <span>
-            Next in <Countdown />
-          </span>
-        </div>
-      </section>
-      <section className="home-extras">
-        <a href="#/practice">
-          <span className="mini-icon">∞</span>
-          <div>
-            <p className="eyebrow">NO WAITING NECESSARY</p>
-            <h3>A little more practice.</h3>
-            <p>Find your rhythm with endless puzzles.</p>
-          </div>
-          <span>→</span>
-        </a>
-        <a href="#/create">
-          <span className="mini-icon">＋</span>
-          <div>
-            <p className="eyebrow">MAKE YOUR OWN RULES</p>
-            <h3>Leave a friend a loophole.</h3>
-            <p>Build a fair challenge. Pass it along.</p>
-          </div>
-          <span>→</span>
-        </a>
-      </section>
-      <div className="home-bottom">
-        <p>Small rules. Wide possibilities.</p>
-        <a href="#/stats">
-          Your journal <span>→</span>
+      </header>
+      <RuleList
+        rules={example}
+        className="home-rules"
+        descriptions={["4 letters", "starts with S", "contains A"]}
+      />
+      <div className="home-actions">
+        <button onClick={startDaily}>
+          {daily
+            ? isComplete(daily)
+              ? "View today’s results"
+              : "Continue today’s game"
+            : "Play today’s game"}
+        </button>
+        <a className="button secondary" href="#/practice">
+          Play unlimited
         </a>
       </div>
-    </div>
+      <p className="daily-information">
+        <span className="desktop-only">{dateLabel} · </span>3 rounds · 6 guesses
+        each
+      </p>
+      <nav className="supporting-nav" aria-label="Home supporting navigation">
+        <a href="#/help">How to play</a>
+        <span aria-hidden="true">·</span>
+        <a href="#/stats">Your stats</a>
+        <span aria-hidden="true">·</span>
+        <a href="#/archive">Archive</a>
+      </nav>
+      <p className="reset-information">
+        Next daily in <time>{countdown}</time> · midnight UTC
+      </p>
+    </section>
   );
 }

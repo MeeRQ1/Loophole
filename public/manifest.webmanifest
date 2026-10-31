@@ -1,16 +1,26 @@
 {
   "id": "/Loophole/",
-  "name": "Loophole — a daily word puzzle",
+  "name": "Loophole \u2014 a daily word puzzle",
   "short_name": "loophole.",
-  "description": "A little room to think. Find any English word that satisfies every rule.",
+  "description": "One word. Every rule. Find any English word that fits every condition.",
   "lang": "en",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#F7F3EA",
-  "theme_color": "#F7F3EA",
+  "background_color": "#11191b",
+  "theme_color": "#11191b",
   "icons": [
-    {"src":"icon-192.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},
-    {"src":"icon-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
   ]
 }

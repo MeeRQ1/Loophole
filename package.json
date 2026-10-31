@@ -1,6 +1,6 @@
 {
   "name": "loophole",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -12,7 +12,8 @@
     "test": "vitest run",
     "test:browser": "playwright test",
     "validate:puzzles": "tsx scripts/validate-puzzles.ts",
-    "generate:puzzles": "tsx scripts/generate-puzzles.ts"
+    "generate:puzzles": "tsx scripts/generate-puzzles.ts",
+    "audit:difficulty": "tsx scripts/audit-difficulty.ts"
   },
   "dependencies": {
     "react": "^19.2.0",

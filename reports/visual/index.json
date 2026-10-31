@@ -1,0 +1,98 @@
+{
+  "date": "2026-11-01",
+  "desktop": "1360×850 @2x",
+  "mobile": "390×844 @2x",
+  "note": "Screenshots use real engine-generated fixture runs. Numeric results are computed, not copied from illustrative Figma statistics.",
+  "figures": [
+    {
+      "file": "01-home.png",
+      "reference": "01",
+      "state": "New visitor; example rules are explanatory, not today’s puzzle."
+    },
+    {
+      "file": "02-daily-warm-up.png",
+      "reference": "02",
+      "state": "Actual calibrated November 1 Warm-Up."
+    },
+    {
+      "file": "03-round-completed.png",
+      "reference": "03",
+      "state": "Actual accepted common word, authoritative rule checks and 100 points."
+    },
+    {
+      "file": "04-daily-results.png",
+      "reference": "04",
+      "state": "Actual completed run: engine-derived points and attempts."
+    },
+    {
+      "file": "05-practice.png",
+      "reference": "05",
+      "state": "Verified medium practice pool selected through the real difficulty control."
+    },
+    {
+      "file": "06-create-challenge.png",
+      "reference": "06",
+      "state": "Validated default builder rules and live common solutions."
+    },
+    {
+      "file": "07-friend-challenge.png",
+      "reference": "07",
+      "state": "A genuinely validated shared challenge with no target word."
+    },
+    {
+      "file": "08-statistics.png",
+      "reference": "08",
+      "state": "Fourteen actual engine-completed fixture runs; numbers are calculated from these records."
+    },
+    {
+      "file": "09-achievements.png",
+      "reference": "09",
+      "state": "Achievements earned from the same legitimate completed fixture runs."
+    },
+    {
+      "file": "10-archive.png",
+      "reference": "10",
+      "state": "Historical date selection with preserved official results."
+    },
+    {
+      "file": "11-how-to-play.png",
+      "reference": "11",
+      "state": "Interactive STAR example with actual rule evaluation."
+    },
+    {
+      "file": "12-settings.png",
+      "reference": "12",
+      "state": "Quiet dark theme and original persistence options."
+    },
+    {
+      "file": "13-round-unsuccessful.png",
+      "reference": "13",
+      "state": "Six actual wrong dictionary words; verified example answers and zero points."
+    },
+    {
+      "file": "14-invalid-challenge.png",
+      "reference": "14",
+      "state": "Sanitized malformed-link recovery."
+    },
+    {
+      "file": "15-mobile-home.png",
+      "reference": "15",
+      "state": "390px mobile home without decoration."
+    },
+    {
+      "file": "16-mobile-daily.png",
+      "reference": "16",
+      "state": "390px calibrated Warm-Up input and attempts."
+    },
+    {
+      "file": "17-mobile-creator.png",
+      "reference": "17",
+      "state": "390px rule builder and validation."
+    },
+    {
+      "file": "18-mobile-navigation.png",
+      "reference": "18",
+      "state": "390px complete navigation menu."
+    }
+  ]
+}

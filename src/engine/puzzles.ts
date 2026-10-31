@@ -1,13 +1,18 @@
-import bank from "../data/puzzles.json";
+import legacy from "../data/puzzles.json";
+import calibrated from "../data/puzzles-v2.json";
 import type { Difficulty, Puzzle } from "./types";
 
-export const scheduleStart = "2026-10-01";
-export const puzzleBank = bank as {
+type PuzzleBank = {
   version: number;
   start: string;
   days: number;
   puzzles: Record<Difficulty, Puzzle[]>;
 };
+/** The complete original bank is retained as the immutable compatibility record. */
+export const puzzleBank = legacy as PuzzleBank;
+export const calibratedBank = calibrated as PuzzleBank;
+export const scheduleStart = "2026-10-01";
+export const rebalanceStart = "2026-11-01";
 const DAY = 86_400_000;
 export function dateKey(date = new Date()): string {
   return date.toISOString().slice(0, 10);
@@ -26,24 +31,28 @@ function hash(value: string): number {
   for (const c of value) n = Math.imul(n ^ c.charCodeAt(0), 16777619);
   return n >>> 0;
 }
-/** The published year is immutable. Later dates use a deterministic verified pool until an appended schedule ships. */
+/** Past dates stay exact. Existing saves embed their own puzzle and never get replaced here. */
 export function dailyPuzzles(date: string): Puzzle[] {
-  const day = dayNumber(date) - 1;
-  return (["easy", "medium", "hard"] as const).map((difficulty, i) => {
-    const pool = puzzleBank.puzzles[difficulty];
-    const index =
-      day >= 0 && day < puzzleBank.days
+  const bank = date >= rebalanceStart ? calibratedBank : puzzleBank;
+  const day = Math.floor(
+    (Date.parse(`${date}T00:00:00Z`) - Date.parse(`${bank.start}T00:00:00Z`)) /
+      DAY,
+  );
+  return (["easy", "medium", "hard"] as const).map((difficulty, index) => {
+    const pool = bank.puzzles[difficulty];
+    const position =
+      day >= 0 && day < bank.days
         ? day
-        : hash(`${date}:v1:${i}`) % pool.length;
-    return { ...pool[index], id: `daily:${date}:${i}` };
+        : hash(`${date}:v${bank.version}:${index}`) % pool.length;
+    return { ...pool[position], id: `daily:${date}:${index}` };
   });
 }
+/** Practice immediately uses measured content, independently of historical Daily Run compatibility. */
 export function practicePuzzle(
   difficulty: Difficulty,
   seed: number | string,
 ): Puzzle {
-  const pool = puzzleBank.puzzles[difficulty];
-  // Consecutive numeric seeds traverse the full pool without immediate repetition.
+  const pool = calibratedBank.puzzles[difficulty];
   const index =
     typeof seed === "number"
       ? ((seed % pool.length) + pool.length) % pool.length

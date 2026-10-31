@@ -1,4 +1,5 @@
 import { commonWords } from "./dictionary";
+import { difficultyMetrics } from "./difficulty";
 import { evaluatePuzzle, validRule } from "./rules";
 import type { Difficulty, Puzzle, Rule } from "./types";
 export function validateChallenge(input: unknown): {
@@ -47,8 +48,7 @@ export function validateChallenge(input: unknown): {
   );
   if (redundant)
     return fail("One rule adds no restriction. Remove or replace it.");
-  const difficulty: Difficulty =
-    solutions.length > 70 ? "easy" : solutions.length > 30 ? "medium" : "hard";
+  const difficulty = difficultyMetrics(rules, solutions).estimatedDifficulty;
   return {
     valid: true,
     message: `${solutions.length} common solutions · Ready to share`,
@@ -60,7 +60,7 @@ export function validateChallenge(input: unknown): {
 export function encodeChallenge(rules: Rule[]): string {
   if (!validateChallenge(rules).valid)
     throw new Error("The challenge is not ready to share.");
-  return btoa(JSON.stringify({ v: 1, r: rules }))
+  return btoa(JSON.stringify({ v: 2, r: rules }))
     .replaceAll("+", "-")
     .replaceAll("/", "_")
     .replace(/=+$/, "");
@@ -80,7 +80,7 @@ export function decodeChallenge(payload: string): Puzzle {
     !parsed ||
     typeof parsed !== "object" ||
     !("v" in parsed) ||
-    parsed.v !== 1 ||
+    (parsed.v !== 1 && parsed.v !== 2) ||
     !("r" in parsed) ||
     Object.keys(parsed).some((k) => !["v", "r"].includes(k))
   )
@@ -92,6 +92,14 @@ export function decodeChallenge(payload: string): Puzzle {
     rules: parsed.r as Rule[],
     solutions: result.solutions,
     commonCount: result.commonCount,
-    difficulty: result.difficulty,
+    // Version-1 URLs keep their original scoring tier; new links use the calibrated estimator.
+    difficulty:
+      parsed.v === 1
+        ? result.commonCount > 70
+          ? "easy"
+          : result.commonCount > 30
+            ? "medium"
+            : "hard"
+        : result.difficulty,
   };
 }

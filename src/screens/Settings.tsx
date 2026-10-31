@@ -7,6 +7,36 @@ import {
 } from "../engine/storage";
 import type { Save, Settings } from "../engine/types";
 
+function PreferenceSwitch({
+  label,
+  checked,
+  onChange,
+}: {
+  label: string;
+  checked: boolean;
+  onChange: (checked: boolean) => void;
+}) {
+  return (
+    <label className="settings-row">
+      <span>{label}</span>
+      <span className="preference-switch">
+        <span className={!checked ? "active" : ""} aria-hidden="true">
+          Off
+        </span>
+        <span aria-hidden="true">/</span>
+        <span className={checked ? "active" : ""} aria-hidden="true">
+          On
+        </span>
+        <input
+          className="sr-only"
+          type="checkbox"
+          checked={checked}
+          onChange={(event) => onChange(event.target.checked)}
+        />
+      </span>
+    </label>
+  );
+}
 export function SettingsScreen({
   save,
   onChange,
@@ -29,165 +59,154 @@ export function SettingsScreen({
       link.href = url;
       link.download = `loophole-backup-${new Date().toISOString().slice(0, 10)}.json`;
       link.click();
-      window.setTimeout(() => URL.revokeObjectURL(url), 1000);
-      setMessage("Your backup has been downloaded. Keep it somewhere safe.");
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      setMessage("Your saved progress has been exported.");
     } catch {
-      setMessage(
-        "The backup could not be downloaded in this browser. Please try again.",
-      );
+      setMessage("This browser could not export a backup. Please try again.");
     }
   };
   const importData = async (file?: File) => {
     if (!file) return;
     if (file.size > 8 * 1024 * 1024) {
-      setMessage(
-        "This backup is too large. Choose a Loophole JSON backup smaller than 8 MB.",
-      );
+      setMessage("Choose a Loophole backup smaller than 8 MB.");
       return;
     }
     try {
-      const imported = parseSave(await file.text());
-      onChange(mergeSaves(save, imported));
+      onChange(mergeSaves(save, parseSave(await file.text())));
       setMessage(
-        "Backup restored. Existing progress has been kept and combined with your backup.",
+        "Saved progress imported. Your existing records have been kept and combined.",
       );
     } catch {
       setMessage(
-        "That file is not a valid Loophole backup. Your current progress has not changed.",
+        "That file is not a valid Loophole backup. Your current progress is unchanged.",
       );
     }
     if (fileInput.current) fileInput.current.value = "";
   };
   return (
-    <section className="stack" aria-labelledby="settings-heading">
-      <header className="page-heading">
-        <p className="eyebrow">MAKE YOURSELF AT HOME</p>
-        <h1 id="settings-heading">Your kind of quiet.</h1>
-        <p className="muted">
-          Settle the page to suit you. Preferences are saved on this device.
+    <section
+      className="quiet-page settings-page"
+      aria-labelledby="settings-heading"
+    >
+      <header className="quiet-heading">
+        <p className="eyebrow">MAKE IT YOURS</p>
+        <h1 id="settings-heading">Settings.</h1>
+        <p className="editorial">
+          Keep things simple, however you like to play.
         </p>
       </header>
-      <section className="panel stack">
-        <h2>Look & feel</h2>
+      <div className="settings-list">
         <div className="settings-row">
-          <label htmlFor="theme-choice">
-            Page theme
-            <span className="muted">
-              Follow your device, or pick a favourite.
-            </span>
-          </label>
-          <select
-            id="theme-choice"
-            value={save.settings.theme}
-            onChange={(event) =>
-              update({ theme: event.target.value as Settings["theme"] })
-            }
-          >
-            <option value="system">Device setting</option>
-            <option value="light">Light paper</option>
-            <option value="dark">Midnight ink</option>
-          </select>
+          <span id="theme-label">Theme</span>
+          <fieldset className="segmented-control" aria-labelledby="theme-label">
+            <legend className="sr-only">Page theme</legend>
+            {(
+              [
+                ["dark", "Dark"],
+                ["light", "Light"],
+                ["system", "System"],
+              ] as const
+            ).map(([value, label], i) => (
+              <label
+                className={save.settings.theme === value ? "active" : ""}
+                key={value}
+              >
+                {i > 0 && (
+                  <span aria-hidden="true" className="segment-divider">
+                    /
+                  </span>
+                )}
+                <input
+                  className="sr-only"
+                  type="radio"
+                  name="theme"
+                  value={value}
+                  checked={save.settings.theme === value}
+                  onChange={() => update({ theme: value })}
+                />
+                <span>{label}</span>
+              </label>
+            ))}
+          </fieldset>
         </div>
-        <label className="settings-row">
-          <span>
-            Higher contrast
-            <span className="muted">
-              Stronger text and borders. Symbols always accompany rule feedback.
-            </span>
-          </span>
-          <input
-            type="checkbox"
-            checked={save.settings.contrast}
-            onChange={(event) => update({ contrast: event.target.checked })}
-          />
-        </label>
-        <label className="settings-row">
-          <span>
-            Gentle motion
-            <span className="muted">
-              Short transitions and rule reveals. Your device’s reduced-motion
-              preference takes priority.
-            </span>
-          </span>
-          <input
-            type="checkbox"
-            checked={save.settings.motion}
-            onChange={(event) => update({ motion: event.target.checked })}
-          />
-        </label>
-        <label className="settings-row">
-          <span>
-            Sound effects
-            <span className="muted">
-              A small note on submission. The game is fully playable in silence.
-            </span>
-          </span>
-          <input
-            type="checkbox"
-            checked={save.settings.sound}
-            onChange={(event) => update({ sound: event.target.checked })}
-          />
-        </label>
-      </section>
-      <section className="panel stack">
-        <h2>Keep your notebook</h2>
-        <p>
-          Your progress lives only in this browser. It is not synced between
-          devices. Clearing browser data can erase it; a backup lets you bring
-          it along.
-        </p>
-        <div className="field-row">
-          <button className="button" onClick={exportData}>
-            Export progress
+        <PreferenceSwitch
+          label="Sound"
+          checked={save.settings.sound}
+          onChange={(sound) => update({ sound })}
+        />
+        <PreferenceSwitch
+          label="Reduced motion"
+          checked={!save.settings.motion}
+          onChange={(reduced) => update({ motion: !reduced })}
+        />
+        <PreferenceSwitch
+          label="High contrast"
+          checked={save.settings.contrast}
+          onChange={(contrast) => update({ contrast })}
+        />
+      </div>
+      <section className="settings-data" aria-labelledby="your-data-heading">
+        <h2 id="your-data-heading" className="eyebrow">
+          YOUR DATA
+        </h2>
+        <div className="settings-data-actions">
+          <button className="text-button" onClick={exportData}>
+            Export saved progress
           </button>
           <button
-            className="button secondary"
+            className="text-button"
             onClick={() => fileInput.current?.click()}
           >
-            Import a backup
+            Import saved progress
+          </button>
+          <button
+            className="text-button danger"
+            onClick={() => setConfirmReset(true)}
+          >
+            Clear all data
           </button>
           <input
+            hidden
             ref={fileInput}
             type="file"
             accept=".json,application/json"
-            hidden
             aria-label="Choose a Loophole backup"
-            onChange={(event) => {
-              void importData(event.target.files?.[0]);
-            }}
+            onChange={(event) => void importData(event.target.files?.[0])}
           />
         </div>
-        <p className="muted">
-          Imports merge saved rounds and achievements with the progress already
-          on this device.
+        <p className="editorial settings-storage-note">
+          Progress is stored locally on this device.
         </p>
-      </section>
-      <section className="panel stack">
-        <h2>A fresh page</h2>
-        <p>
-          Reset all local progress, statistics, achievements, and preferences.
-          Export a backup first if you might want them back.
-        </p>
-        {confirmReset ? (
+        <details className="quiet-details">
+          <summary>About saved progress</summary>
+          <p>
+            Progress is not synced between devices. Export a backup before
+            clearing browser data. Importing combines valid saved games and
+            achievements with your existing progress. Your device’s
+            reduced-motion preference always takes priority.
+          </p>
+        </details>
+        {confirmReset && (
           <div
             className="inline-confirm"
             role="group"
             aria-label="Confirm saved data reset"
           >
             <p>
-              <strong>Delete all Loophole data on this device?</strong> This
-              cannot be undone without a backup.
+              <strong>Delete all Loophole data on this device?</strong> Export a
+              backup first if you want to keep it. This clears saved rounds,
+              statistics, achievements, preferences, and recovery copies.
             </p>
             <div className="field-row">
               <button
-                className="button danger"
+                className="danger"
                 onClick={() => {
                   const cleared = clearSavedData();
                   onChange(defaultSave());
                   setConfirmReset(false);
                   setMessage(
                     cleared
-                      ? "Local progress, preferences, and recovery copies have been reset."
+                      ? "Your local data has been cleared."
                       : "This session has been reset, but browser storage could not be cleared. Check your browser’s site-data settings.",
                   );
                 }}
@@ -195,23 +214,16 @@ export function SettingsScreen({
                 Yes, delete local data
               </button>
               <button
-                className="button secondary"
+                className="secondary"
                 onClick={() => setConfirmReset(false)}
               >
                 Keep my progress
               </button>
             </div>
           </div>
-        ) : (
-          <button
-            className="button secondary"
-            onClick={() => setConfirmReset(true)}
-          >
-            Reset saved data…
-          </button>
         )}
       </section>
-      <p className="notice" role="status" aria-live="polite">
+      <p className="inline-message" role="status" aria-live="polite">
         {message}
       </p>
     </section>

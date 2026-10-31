@@ -83,7 +83,7 @@ describe("safe friend challenges", () => {
     expect(decoded.solutions.length).toBeGreaterThanOrEqual(5);
     expect(
       JSON.parse(atob(encoded.replaceAll("-", "+").replaceAll("_", "/"))),
-    ).toEqual({ v: 1, r: rules });
+    ).toEqual({ v: 2, r: rules });
   });
   it("rejects impossible, redundant and malformed rules", () => {
     expect(
