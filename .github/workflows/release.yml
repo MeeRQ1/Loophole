@@ -1,0 +1,45 @@
+name: Versioned release
+on:
+  push:
+    tags: ["v*.*.*"]
+permissions:
+  contents: read
+jobs:
+  verify-and-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify semantic tag and package version
+        run: |
+          node --input-type=module -e '
+          import fs from "node:fs";
+          const tag = process.env.GITHUB_REF_NAME;
+          if (!/^v\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/.test(tag)) throw Error("Use a semantic version tag");
+          if (tag.slice(1) !== JSON.parse(fs.readFileSync("package.json", "utf8")).version) throw Error("Tag must match package.json version");'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm test
+      - run: npm run validate:puzzles
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:browser
+      - name: Package static website
+        run: tar -czf "loophole-${GITHUB_REF_NAME}.tar.gz" -C dist .
+      - name: Publish verified release with generated notes
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [[ "$GITHUB_REF_NAME" == *-* ]]; then
+            gh release create "$GITHUB_REF_NAME" "loophole-${GITHUB_REF_NAME}.tar.gz" --verify-tag --generate-notes --prerelease --title "Loophole ${GITHUB_REF_NAME}"
+          else
+            gh release create "$GITHUB_REF_NAME" "loophole-${GITHUB_REF_NAME}.tar.gz" --verify-tag --generate-notes --title "Loophole ${GITHUB_REF_NAME}"
+          fi
